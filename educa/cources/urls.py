@@ -1,8 +1,9 @@
 from django.urls import path
 from . import views
 
-
 urlpatterns = [
+
+
 
     path('module/<int:module_id>/',
         views.ModuleContentListView.as_view(),
@@ -40,5 +41,13 @@ urlpatterns = [
     path('<pk>/module/',
         views.CourseModuleUpdateView.as_view(),
         name='course_module_update'),
+
+    path('subject/<slug:subject>/',
+        views.CourseListView.as_view(),
+        name='course_list_subject'),
+        
+    path('<slug:slug>/',
+        views.CourseDetailView.as_view(),
+        name='course_detail'),
 
 ]

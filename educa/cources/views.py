@@ -9,8 +9,35 @@ from .forms import ModuleFormSet
 from django.forms.models import modelform_factory
 from django.apps import apps
 from .models import Module, Content
+from django.db.models import Count
+from django.views.generic.detail import DetailView
+from .models import Subject
 
 
+
+class CourseListView(TemplateResponseMixin, View):
+    model = Course
+    template_name = 'courses/course/list.html'
+
+    def get(self, request, subject=None):
+        subjects = Subject.objects.annotate(total_courses=Count('courses'))
+        courses = Course.objects.annotate(total_modules=Count('modules'))
+
+        if subject:
+            subject = get_object_or_404(Subject, slug=subject)  # get the pecifiec Subject
+            courses = courses.filter(subject=subject)           # to return its courses
+        return self.render_to_response({'subjects': subjects,   # else : will return all courses
+                                        'subject': subject,
+                                        'courses':courses})
+
+
+
+class CourseDetailView(DetailView):
+    model = Course
+    template_name = 'courses/course/detail.html'
+
+############################## Instructor ######################################
+#################################################################
 ########################### content #############################
 
 class ModuleContentListView(TemplateResponseMixin, View):
@@ -83,7 +110,7 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
     def get_formset(self, data=None):
         return ModuleFormSet(instance=self.course, data=data)
 
-        
+
     def dispatch(self, request, pk):
         self.course = get_object_or_404(Course, id=pk, owner=request.user)
         return super().dispatch(request, pk)
@@ -141,5 +168,3 @@ class CourseUpdateView(OwnerCourseEditMixin, UpdateView):
 class CourseDeleteView(OwnerCourseMixin, DeleteView):
     template_name = 'courses/manage/course/delete.html'
     permission_required = 'courses.delete_course'
-
-
