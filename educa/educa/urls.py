@@ -19,9 +19,14 @@ from django.contrib.auth import views as auth_views
 from cources.views import CourseListView
 
 urlpatterns = [
-    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # login
-    path('accounts/logout/', auth_views.LogoutView.as_view(),name='logout'),    # logout
+
     path('admin/', admin.site.urls),
-    path('course/', include('cources.urls')),
-    path('', CourseListView.as_view(), name='course_list'),
+
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),  # instructor login
+    path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),    # instructor logout
+
+    path('course/', include('cources.urls')),  # courses app
+    path('', CourseListView.as_view(), name='course_list'),  # home page of courses
+
+    path('students/', include('students.urls')),    # student app
 ]
