@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType      # generic relations
 from django.contrib.contenttypes.fields import GenericForeignKey    # generic relations
 
@@ -20,6 +20,10 @@ class ItemBase(models.Model):
 
     def __str__(self):
         return self.title
+
+    # to render the data into string
+    def render(self):
+        return render_to_string(f'courses/content/{self._meta.model_name}.html', {'item': self})
 
 
 class Text(ItemBase):
@@ -81,9 +85,8 @@ class Module(models.Model):
 
 ####################################################################################################
 
+
 # point to the objects of any model
-
-
 class Content(models.Model):
     module = models.ForeignKey(Module, related_name='contents', on_delete=models.CASCADE)
     content_type = models.ForeignKey(ContentType,

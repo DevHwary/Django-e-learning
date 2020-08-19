@@ -46,7 +46,7 @@ class CourseDetailView(DetailView):
     add extra data as model, form, or any kind of data.
 
     # adding books to the Publisher
-    
+
     class PublisherDetail(DetailView):
     model = Publisher
 
@@ -58,9 +58,9 @@ class CourseDetailView(DetailView):
         return context
         '''
 
-############################## Instructor ######################################
+#                          Instructor
 #################################################################
-########################### content #############################
+#                           content
 
 
 class ModuleContentListView(TemplateResponseMixin, View):
@@ -119,7 +119,7 @@ class ContentCreateUpdateView(TemplateResponseMixin, View):
             return redirect('module_content_list', self.module.id)
         return self.render_to_response({'form': form, 'object': self.obj})
 
-########################## Modules ##############################
+#                        Modules
 
 
 class CourseModuleUpdateView(TemplateResponseMixin, View):
@@ -145,7 +145,7 @@ class CourseModuleUpdateView(TemplateResponseMixin, View):
         return self.render_to_response({'course': self.course, 'formset': formset})
 
 
-############################## Mixins Classes ################################
+#                         Mixins Classes
 
 class OwnerMixin(object):
     def get_queryset(self):
@@ -159,7 +159,7 @@ class OwnerEditMixin(object):
         return super().form_valid(form)
 
 
-############################## Owner Courses ##########################################
+#                        Owner Courses
 
 class OwnerCourseMixin(OwnerMixin, LoginRequiredMixin, PermissionRequiredMixin):
     model = Course
