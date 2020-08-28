@@ -21,6 +21,8 @@ from cources.views import CourseListView
 from django.conf import settings
 from django.conf.urls.static import static
 
+from schema_graph.views import Schema
+
 
 urlpatterns = [
 
@@ -30,9 +32,13 @@ urlpatterns = [
     path('accounts/logout/', auth_views.LogoutView.as_view(), name='logout'),    # instructor logout
 
     path('course/', include('cources.urls')),  # courses app
+    path('api/', include('api.urls')),  # API app
+
     path('', CourseListView.as_view(), name='course_list'),  # home page of courses
 
     path('students/', include('students.urls')),    # student app
+
+    path('schema/', Schema.as_view()),  # graph the schema of the models
 ]
 
 if settings.DEBUG:

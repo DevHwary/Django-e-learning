@@ -36,7 +36,12 @@ INSTALLED_APPS = [
 
     'cources.apps.CourcesConfig',   # added for courses app
     'students.apps.StudentsConfig',  # added for students app
+    'api.apps.ApiConfig',   # added for the API
     'embed_video',  # django-embed-video
+    'memcache_status',  # to Monitor the cashe status
+    'rest_framework',   # REST framework
+    'schema_graph',  # Graph the models of the database
+    'django_extensions',  # and Pydotplus for prinitng the pdf of the models
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -49,12 +54,20 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.cache.UpdateCacheMiddleware',    # caching the entire website
     'django.middleware.common.CommonMiddleware',
+    'django.middleware.cache.FetchFromCacheMiddleware',  # caching the entire website
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
+    ],
+}
 
 ROOT_URLCONF = 'educa.urls'
 
@@ -124,6 +137,18 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Caching
+'''
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+'''
+
+
+# Caching
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -133,3 +158,14 @@ LOGIN_REDIRECT_URL = reverse_lazy('student_course_list')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+
+# Caching the entire website for 15 minutes
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 60 * 15  # 15 minutes
+# CACHE_MIDDLEWARE_KEY_PREFIX = 'educa'
+
+# Graph models
+GRAPH_MODELS = {
+    'all_applications': True,
+    'group_models': True,
+}
