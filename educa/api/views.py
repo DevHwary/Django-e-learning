@@ -1,11 +1,14 @@
 from rest_framework import generics
 from cources.models import Subject, Course, Module
-from . serializers import SubjectSerializer, CourseSerializer, ModuleSrializer
+from . serializers import SubjectSerializer, CourseSerializer, ModuleSrializer, CourseWithContentsSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
+from .permissions import IsEnrolled
+from rest_framework.decorators import action
+from rest_framework import viewsets
 
 
 # So Important # # # # # # # # # #
@@ -32,6 +35,20 @@ class SubjectDetailView(generics.RetrieveUpdateDestroyAPIView):
 #########################################################################
 
 
+# Not prefered
+class CourseViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+
+    @action(detail=True,
+            methods=['get'],
+            serializer_class=CourseWithContentsSerializer,
+            authentication_classes=[BasicAuthentication],
+            permission_classes=[IsAuthenticated, IsEnrolled])
+    def contents(self, request, *args, **kwargs):
+        return self.retrieve(request, *args, **kwargs)
+
+
 # course
 class CourseView(generics.ListCreateAPIView):
     queryset = Course.objects.all()
@@ -49,9 +66,8 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
 #########################################################################
 
+
 # module
-
-
 class ModuleView(generics.ListCreateAPIView):
     queryset = Module.objects.all()
     serializer_class = ModuleSrializer

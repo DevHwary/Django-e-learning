@@ -1,6 +1,10 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import routers
 
+
+router = routers.DefaultRouter()
+router.register('courses-viewsets', views.CourseViewSet)
 
 urlpatterns = [
 
@@ -25,7 +29,7 @@ urlpatterns = [
          views.CourseView.as_view(),
          name='api_course_list'),
 
-    path('courses/<pk>/',
+    path('course/<pk>/',
          views.CourseDetailView.as_view(),
          name='api_course_detail'),
 
@@ -35,8 +39,9 @@ urlpatterns = [
          views.ModuleView.as_view(),
          name='api_module_list'),
 
-    path('modules/<pk>/',
+    path('module/<pk>/',
          views.ModuleDetailView.as_view(),
          name='api_module_detail'),
 
+    path('', include(router.urls)),
 ]
