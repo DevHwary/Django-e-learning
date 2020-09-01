@@ -37,6 +37,7 @@ urlpatterns = [
     path('', CourseListView.as_view(), name='course_list'),  # home page of courses
 
     path('students/', include('students.urls')),    # student app
+    path('chat/', include('chat.urls', namespace='chat')),  # chat app
 
     path('schema/', Schema.as_view()),  # graph the schema of the models
 ]

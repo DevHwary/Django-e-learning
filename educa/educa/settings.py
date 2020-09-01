@@ -37,11 +37,13 @@ INSTALLED_APPS = [
     'cources.apps.CourcesConfig',   # added for courses app
     'students.apps.StudentsConfig',  # added for students app
     'api.apps.ApiConfig',   # added for the API
+    'chat.apps.ChatConfig',  # added for the chat app
     'embed_video',  # django-embed-video
     'memcache_status',  # to Monitor the cashe status
     'rest_framework',   # REST framework
     'schema_graph',  # Graph the models of the database
     'django_extensions',  # and Pydotplus for prinitng the pdf of the models
+    'channels',  # for channels
 
     'django.contrib.admin',
     'django.contrib.auth',
@@ -54,9 +56,9 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.cache.UpdateCacheMiddleware',    # caching the entire website
+    # 'django.middleware.cache.UpdateCacheMiddleware',    # caching the entire website
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.cache.FetchFromCacheMiddleware',  # caching the entire website
+    # 'django.middleware.cache.FetchFromCacheMiddleware',  # caching the entire website
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -168,4 +170,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 GRAPH_MODELS = {
     'all_applications': True,
     'group_models': True,
+}
+
+
+# for channels
+ASGI_APPLICATION = 'educa.routing.application'
+
+# channels-redis, to communicate between ChatConsumer
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
 }
